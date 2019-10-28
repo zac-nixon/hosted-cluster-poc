@@ -1,0 +1,12 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openvpn-operator
+subjects:
+  - kind: ServiceAccount
+    namespace: ${NAMESPACE}
+    name: openvpn-operator
+roleRef:
+  kind: ClusterRole
+  name: openvpn-operator
+  apiGroup: rbac.authorization.k8s.io

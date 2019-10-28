@@ -1,0 +1,19 @@
+apiVersion: ibm.com/v1alpha1
+kind: OpenVPN
+metadata:
+  name: managed-ovpn
+  namespace: ${NAMESPACE}
+spec:
+  ha_private_managed_master_hostname: ${EXTERNAL_API_DNS_NAME}
+  ha_public_managed_master_hostname: ${EXTERNAL_API_DNS_NAME}
+  managed_master_endpoints:
+    - ${EXTERNAL_API_DNS_NAME}
+  managed_master_hostname: ${EXTERNAL_API_DNS_NAME}
+  openvpn_server_common_dns_entry_list:
+    - ${EXTERNAL_API_DNS_NAME}
+  managed_pod_subnet: ${POD_NETWORK_CIDR}
+  managed_service_subnet: ${SERVICE_NETWORK_CIDR}
+  openvpn_server_image: zacftw/openvpn:2.4.6-r3-IKS-8
+  openvpn_client_image: zacftw/openvpn-client:2.4.6-r3-IKS-8
+  master_pod_label: "app=kube-apiserver"
+  worker_subnets: [${MANAGED_WORKER_SUBNETS}]

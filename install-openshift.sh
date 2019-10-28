@@ -2,7 +2,7 @@
 
 source config-defaults.sh
 source lib/common.sh
-
+echo $EXTERNAL_API_DNS_NAME
 export API_NODEPORT="${API_NODEPORT:-$EXTERNAL_API_PORT}"
 
 if ! oc get pods --request-timeout=5s &>/dev/null; then
@@ -31,7 +31,9 @@ oc create secret generic pull-secret --from-file=.dockerconfigjson=pull-secret -
 oc create secret generic pull-secret -n openshift-config --from-file=.dockerconfigjson=pull-secret --type=kubernetes.io/dockerconfigjson -oyaml --dry-run > manifests/user/00-pull-secret.yaml
 for component in etcd kube-apiserver kube-controller-manager kube-scheduler cluster-bootstrap openshift-apiserver openshift-controller-manager openvpn cluster-version-operator auto-approver ca-operator user-manifests-bootstrapper; do
   pushd ${component} >/dev/null
-  ./render.sh >/dev/null
+  echo "Rendering component ${component}"
+  ./render.sh
+  echo "Done rendering component ${component}"
   popd >/dev/null
 done
 
@@ -40,7 +42,7 @@ if [ "${PLATFORM}" != "none" ]; then
   ./contrib/${PLATFORM}/setup.sh >/dev/null
 else
   echo "No platform to setup resources"
-  exit 0
+  #exit 0
 fi
 
 echo "Applying management cluster resources"

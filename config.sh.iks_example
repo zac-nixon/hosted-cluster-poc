@@ -36,3 +36,5 @@ export BASE_DOMAIN=example.com
 
 # the subdomain to be used for the ingress router
 export INGRESS_SUBDOMAIN="apps.${BASE_DOMAIN}"
+
+export MANAGED_WORKER_SUBNETS=""

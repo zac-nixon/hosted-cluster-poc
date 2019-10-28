@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openvpn-operator
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: openvpn-operator
+  template:
+    metadata:
+      labels:
+        name: openvpn-operator
+    spec:
+      serviceAccountName: openvpn-operator
+      containers:
+        - name: ansible
+          command:
+            - /usr/local/bin/ao-logs
+            - /tmp/ansible-operator/runner
+            - stdout
+          image: zacftw/openvpn-operator:v1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /tmp/ansible-operator/runner
+              name: runner
+              readOnly: true
+        - name: operator
+          image: zacftw/openvpn-operator:v1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /tmp/ansible-operator/runner
+              name: runner
+            - mountPath: /mnt/etc/kubernetes
+              name: managed-cluster-kubeconfig
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "openvpn-operator"
+      volumes:
+        - name: runner
+          emptyDir: {}
+        - name: managed-cluster-kubeconfig
+          secret:
+            secretName: openvpn-operator-secret
