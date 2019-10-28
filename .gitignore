@@ -11,3 +11,4 @@ ignition-generator/fake-root/var/lib/kubelet/config.json
 /machine-api/*.json
 /machine-api/*.ign
 /kubeadmin-password
+.idea

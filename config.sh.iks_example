@@ -1,6 +1,9 @@
 # none, aws, or openstack
 export PLATFORM=none
 
+# network type
+export NETWORK_TYPE=OpenShiftSDN
+
 # namespace in the managed cluster in which to deploy the control plane
 export NAMESPACE="${NAMESPACE:=hosted}"
 
@@ -37,4 +40,8 @@ export BASE_DOMAIN=example.com
 # the subdomain to be used for the ingress router
 export INGRESS_SUBDOMAIN="apps.${BASE_DOMAIN}"
 
+# The worker subnets for the managed cluster
 export MANAGED_WORKER_SUBNETS=""
+
+# number of replicas for all ha componentry (typically 3)
+export REPLICAS=3
